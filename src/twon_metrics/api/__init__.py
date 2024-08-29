@@ -69,16 +69,18 @@ classfifiers: typing.Dict[str, HFClassify] = {
 
 @app.post("/")
 async def calc_metric(req: Request) -> Response:
+    colllated_logits = {
+        label: list(classfifier(req.samples, theta=req.threshold))
+        for label, classfifier in classfifiers.items()
+    }
+
     return Response(
         predictions=[
             Prediction(
                 sample=sample,
                 results={
                     label: preds[n]
-                    for label, preds in {
-                        label: list(classfifier(req.samples, theta=req.threshold))
-                            for label, classfifier in classfifiers.items()
-                    }.items()
+                    for label, preds in colllated_logits.items()
                 }
             )
             for n, sample in enumerate(req.samples)
