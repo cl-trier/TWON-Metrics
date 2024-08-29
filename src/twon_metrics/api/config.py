@@ -6,10 +6,7 @@ class Config:
     title: str = "TWON Metrics API"
     version: str = "0.1.0"
 
-    trust_origins: typing.List[str] = [
-        "http://localhost:5173",
-        "http://localhost:8000",
-    ]
+    trust_origins: typing.List[str] = ['*']
 
     log_path: str = ".logs/"
 
