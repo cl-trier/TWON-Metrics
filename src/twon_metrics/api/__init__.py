@@ -67,12 +67,21 @@ classfifiers: typing.Dict[str, HFClassify] = {
     for label, slug in MODELS
 }
 
+def batched(iterable, n=1):
+    l = len(iterable)
+    for ndx in range(0, l, n):
+        yield iterable[ndx:min(ndx + n, l)]
+
 @app.post("/")
 async def calc_metric(req: Request) -> Response:
-    colllated_logits = {
-        label: list(classfifier(req.samples, theta=req.threshold))
-        for label, classfifier in classfifiers.items()
+
+    collated_logits: typing.Dict = {
+        label: [] for label in classfifiers.keys()
     }
+
+    for batch in batched(req.samples, 64):
+        for label, classfifier in classfifiers.items():
+           collated_logits[label].extend(classfifier(batch, theta=req.threshold))
 
     return Response(
         predictions=[
@@ -80,7 +89,7 @@ async def calc_metric(req: Request) -> Response:
                 sample=sample,
                 results={
                     label: preds[n]
-                    for label, preds in colllated_logits.items()
+                    for label, preds in collated_logits.items()
                 }
             )
             for n, sample in enumerate(req.samples)
