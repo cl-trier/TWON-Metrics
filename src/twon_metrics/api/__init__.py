@@ -32,7 +32,7 @@ class Request(pydantic.BaseModel):
                         "If Biden were serious about fixing this border crisis, he should have announced he was reinstating our policies that worked. Visiting isn't enough.",
                         "Great to see the job market bouncing back! But let's not forget that this growth is largely driven by low-wage, precarious work. We need policies that prioritize good jobs, affordable healthcare, and a living wage for all, not just corporate profits. #workersrights #economicjustice"
                     ],
-                    "theta": 0.5
+                    "threshold": 0.5
                 }
             ]
         }
