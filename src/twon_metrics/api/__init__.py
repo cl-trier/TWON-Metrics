@@ -1,11 +1,14 @@
 import typing
 import pydantic
 
+import torch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from twon_metrics.hf_classify import HFClassify
 from twon_metrics.api.config import Config
+
+DEVICE: torch.device = torch.device("cuda:3")
 
 
 MODELS: typing.Tuple[str, str] = [
@@ -16,6 +19,11 @@ MODELS: typing.Tuple[str, str] = [
     ("offensive",  "cardiffnlp/twitter-roberta-base-offensive"),
     ("hate", "cardiffnlp/twitter-roberta-base-hate-latest")
 ]
+
+classfifiers: typing.Dict[str, HFClassify] = {
+    label: HFClassify(slug, device=DEVICE)
+    for label, slug in MODELS
+}
 
 
 class Request(pydantic.BaseModel):
@@ -61,11 +69,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-classfifiers: typing.Dict[str, HFClassify] = {
-    label: HFClassify(slug)
-    for label, slug in MODELS
-}
 
 def batched(iterable, n=1):
     l = len(iterable)
