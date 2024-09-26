@@ -11,14 +11,10 @@ CFG: Config = Config()
 
 
 classfifiers: typing.Dict[str, HFClassify] = {
-    label: HFClassify(slug, device=CFG.device)
-    for label, slug in CFG.models
+    label: HFClassify(slug, device=CFG.device) for label, slug in CFG.models
 }
 
-app = FastAPI(
-    title=CFG.title,
-    version=CFG.version
-)
+app = FastAPI(title=CFG.title, version=CFG.version)
 
 app.add_middleware(
     CORSMiddleware,
@@ -31,23 +27,19 @@ app.add_middleware(
 
 @app.post("/")
 async def calc_metric(req: schemas.Request) -> schemas.Response:
-
     collated_logits: typing.Dict[str, typing.List] = {
         label: [] for label in classfifiers.keys()
     }
 
     for batch in util.batched(req.samples, CFG.batch_size):
         for label, classfifier in classfifiers.items():
-           collated_logits[label].extend(classfifier(batch, theta=req.threshold))
+            collated_logits[label].extend(classfifier(batch, theta=req.threshold))
 
     return schemas.Response(
         predictions=[
             schemas.Prediction(
                 sample=sample,
-                results={
-                    label: preds[n]
-                    for label, preds in collated_logits.items()
-                }
+                results={label: preds[n] for label, preds in collated_logits.items()},
             )
             for n, sample in enumerate(req.samples)
         ]

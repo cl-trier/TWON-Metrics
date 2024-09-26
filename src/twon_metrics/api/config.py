@@ -9,15 +9,15 @@ class Config(pydantic.BaseModel):
     title: str = "TWON Metrics API"
     version: str = "0.1.0"
 
-    trust_origins: typing.List[str] = ['*']
+    trust_origins: typing.List[str] = ["*"]
 
     models: typing.Tuple[str, str] = [
         ("topics", "cardiffnlp/tweet-topic-21-multi"),
         ("emotions", "cardiffnlp/twitter-roberta-base-emotion-multilabel-latest"),
         ("sentiment", "cardiffnlp/twitter-roberta-base-sentiment-latest"),
         ("irony", "cardiffnlp/twitter-roberta-base-irony"),
-        ("offensive",  "cardiffnlp/twitter-roberta-base-offensive"),
-        ("hate", "cardiffnlp/twitter-roberta-base-hate-latest")
+        ("offensive", "cardiffnlp/twitter-roberta-base-offensive"),
+        ("hate", "cardiffnlp/twitter-roberta-base-hate-latest"),
     ]
 
     device: torch.device = torch.device("cuda:3")
