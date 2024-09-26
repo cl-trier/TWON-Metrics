@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "twon-metrics"
+version = "0.1.0"
+description = ""
+authors = ["Simon Münker <simon.muenker@googlemail.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pydantic = "^2.8.2"
+fastapi = {extras = ["standard"], version = "^0.112.2"}
+uvicorn = "^0.30.6"
+gunicorn = "^23.0.0"
+torch = "^2.4.0"
+transformers = "^4.44.2"
+numpy = "^2.1.0"
+pandas = "^2.2.2"
+tqdm = "^4.66.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
